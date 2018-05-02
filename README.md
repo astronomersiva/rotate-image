@@ -1,4 +1,4 @@
-# rotate-image
+# rotate-image ![Travis Build Status](https://travis-ci.org/astronomersiva/rotate-image.svg?branch=master)
 
 Rotates a given image by n degrees with node-canvas.
 
