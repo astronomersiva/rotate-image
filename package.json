@@ -1,22 +1,26 @@
 {
-  "name": "rotate-image",
+  "name": "@astronomersiva/rotate-image",
   "version": "1.0.0",
-  "description": "",
+  "description": "Rotates an image by n degrees using node-canvas.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/astronomersiva/rotate-image.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "sivasubramanyama@gmail.com",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/astronomersiva/rotate-image/issues"
   },
   "homepage": "https://github.com/astronomersiva/rotate-image#readme",
   "dependencies": {
     "canvas": "^1.6.10"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1"
   }
 }

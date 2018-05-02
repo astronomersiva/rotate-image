@@ -1,32 +1,54 @@
-module.exports = function(imageSrc, rotation = 1) {
-  const fs = require('fs');
-  const Canvas = require('canvas');
-  const getBoundingDimensions = require('./utils/get-bounding-dimentions');
-  const { Image } = Canvas;
+module.exports = function({ src, dest, rotation = 0 }) {
+  return new Promise((resolve, reject) => {
+    const fs = require('fs');
+    const Canvas = require('canvas');
+    const getBoundingDimensions = require('./utils/get-bounding-dimentions');
+    const { Image } = Canvas;
 
-  const sourceImage = new Image();
-  sourceImage.src = imageSrc;
+    const sourceImage = new Image();
+    sourceImage.src = src;
 
-  rotation = 90;
-  const radians = (Math.PI/180) * rotation;
+    const radians = (Math.PI/180) * rotation;
+    const {
+      width: imageWidth,
+      height: imageHeight,
+    } = sourceImage;
+    const {
+      width,
+      height,
+    } = getBoundingDimensions(imageWidth, imageHeight, radians);
 
-  const { width, height } = getBoundingDimensions(sourceImage.width, sourceImage.height, radians);
-  const canvas = new Canvas(width, height);
-  const ctx = canvas.getContext('2d');
-  console.log(sourceImage.width, sourceImage.height);
-  console.log(width, height);
+    const canvas = new Canvas(width, height);
+    const ctx = canvas.getContext('2d');
 
-  ctx.rotate(radians);
+    ctx.translate(width/2, height/2);
+    ctx.rotate(radians);
+    ctx.translate(-width/2, -height/2);
+    ctx.drawImage(
+      sourceImage,
+      (width/2) - (imageWidth/2),
+      (height/2) - (imageHeight/2),
+      imageWidth,
+      imageHeight
+    );
 
-  ctx.drawImage(sourceImage, 0, 0);
+    dest = dest ? dest : `rotated-${src}`;
+    const out = fs.createWriteStream(`./${dest}`);
+    const writeStream = canvas.pngStream();
+    writeStream.on('data', (chunk) => {
+      out.write(chunk);
+    });
 
-  const out = fs.createWriteStream('./output.png');
-  const writeStream = canvas.pngStream();
-  writeStream.on('data', function(chunk) {
-    out.write(chunk);
+    writeStream.on('end', () => {
+      return () => {
+        resolve();
+      };
+    });
+
+    writeStream.on('error', (error) => {
+      return () => {
+        reject(error);
+      };
+    });
   });
-  
-  writeStream.on('end', async function() {
-    console.log('saved png');
-  });
-}
+};
