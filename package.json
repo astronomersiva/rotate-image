@@ -1,6 +1,6 @@
 {
   "name": "@astronomersiva/rotate-image",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Rotates an image by n degrees using node-canvas.",
   "main": "index.js",
   "scripts": {

@@ -33,22 +33,14 @@ module.exports = function({ src, dest, rotation = 0 }) {
     );
 
     dest = dest ? dest : `rotated-${src}`;
-    const out = fs.createWriteStream(`./${dest}`);
+    const out = fs.createWriteStream(dest);
     const writeStream = canvas.pngStream();
     writeStream.on('data', (chunk) => {
       out.write(chunk);
     });
 
-    writeStream.on('end', () => {
-      return () => {
-        resolve();
-      };
-    });
+    writeStream.on('end', resolve());
 
-    writeStream.on('error', (error) => {
-      return () => {
-        reject(error);
-      };
-    });
+    writeStream.on('error', reject(error));
   });
 };
